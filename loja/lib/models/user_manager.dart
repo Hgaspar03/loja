@@ -66,4 +66,10 @@ class UserManager extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void signOut() {
+    auth.signOut();
+    user = null;
+    notifyListeners();
+  }
 }
