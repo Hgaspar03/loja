@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:loja/models/product_manager.dart';
+import 'package:loja/models/products.dart';
 import 'package:loja/screens/base/base_screen.dart';
 import 'package:loja/screens/login/lgin_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:loja/models/user_manager.dart';
 import 'package:loja/screens/signup/signup_screen.dart';
+import 'package:loja/screens/product/product_screen.dart';
 
 void main() async {
   runApp(MyApp());
@@ -13,9 +16,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      lazy: false,
-      create: (_) => UserManager(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ProductManager(),
+          lazy: false,
+        ),
+        ChangeNotifierProvider(
+          lazy: false,
+          create: (_) => UserManager(),
+        )
+      ],
       child: MaterialApp(
         title: 'Loja do Helenio Demo',
         debugShowCheckedModeBanner: false,
@@ -32,10 +43,14 @@ class MyApp extends StatelessWidget {
               break;
             case '/signup':
               return MaterialPageRoute(builder: (_) => SignUpScreen());
+              break;
+            case '/product':
+              return MaterialPageRoute(
+                  builder: (_) => ProductScreen(settings.arguments as Product));
+              break;
             case '/base':
             default:
               return MaterialPageRoute(builder: (_) => BaseScreen());
-              break;
           }
         },
       ),
