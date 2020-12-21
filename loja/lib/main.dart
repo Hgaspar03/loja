@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:loja/models/cart_manager.dart';
 import 'package:loja/models/product_manager.dart';
 import 'package:loja/models/products.dart';
 import 'package:loja/screens/base/base_screen.dart';
+import 'package:loja/screens/cart_screen.dart';
 import 'package:loja/screens/login/lgin_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:loja/models/user_manager.dart';
@@ -13,7 +15,6 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -25,6 +26,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           lazy: false,
           create: (_) => UserManager(),
+        ),
+        ProxyProvider<UserManager, CartManager>(
+          create: (_) => CartManager(),
+          update: (_, userMnanager, cartManager) {
+            return cartManager..updateUser(userMnanager);
+          },
+          lazy: false,
         )
       ],
       child: MaterialApp(
@@ -43,6 +51,9 @@ class MyApp extends StatelessWidget {
               break;
             case '/signup':
               return MaterialPageRoute(builder: (_) => SignUpScreen());
+              break;
+            case '/cart':
+              return MaterialPageRoute(builder: (_) => CartScreen());
               break;
             case '/product':
               return MaterialPageRoute(

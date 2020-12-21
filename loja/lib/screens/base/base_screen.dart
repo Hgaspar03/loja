@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:loja/common/CustomDrawer/custom_drawer.dart';
+import 'package:loja/screens/login/lgin_screen.dart';
 import 'package:loja/screens/products/products_screem.dart';
 import 'package:provider/provider.dart';
 import 'package:loja/models/page_manager.dart';
-import 'package:loja/screens/login/lgin_screen.dart';
 
 class BaseScreen extends StatelessWidget {
   final PageController pageController = PageController();
@@ -16,13 +16,13 @@ class BaseScreen extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
         children: [
-          ProductsScreen(),
           Scaffold(
             drawer: CustmDrawer(),
             appBar: AppBar(
               title: Text("Helenio's Home"),
             ),
           ),
+          ProductsScreen(),
           Container(
               color: Colors.red,
               child: Center(
@@ -30,7 +30,7 @@ class BaseScreen extends StatelessWidget {
                   onPressed: () {
                     pageController.jumpToPage(0);
                   },
-                  child: Text('NEXT'),
+                  child: Text('Next'),
                 ),
               )),
         ],

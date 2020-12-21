@@ -82,19 +82,20 @@ class LoginScreen extends StatelessWidget {
                         : () {
                             if (formkey.currentState.validate()) {
                               userManager.signIn(
-                                  user: User(
-                                      email: emailController.text,
-                                      password: passwordControler.text),
-                                  onFail: (e) {
-                                    scaffoldKey.currentState
-                                        .showSnackBar(SnackBar(
-                                      content: Text("Erro: $e"),
-                                      backgroundColor: Colors.red,
-                                    ));
-                                  },
-                                  onSucess: () {
-                                    Navigator.of(context).pop();
-                                  });
+                                user: User(
+                                    email: emailController.text,
+                                    password: passwordControler.text),
+                                onFail: (e) {
+                                  scaffoldKey.currentState
+                                      .showSnackBar(SnackBar(
+                                    content: Text("Erro: $e"),
+                                    backgroundColor: Colors.red,
+                                  ));
+                                },
+                                onSucess: () {
+                                  Navigator.of(context).pop();
+                                },
+                              );
                             }
                           },
                     color: Theme.of(context).primaryColor,
