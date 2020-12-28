@@ -10,6 +10,7 @@ class CartProduct extends ChangeNotifier {
     size = product.selectedSize.name;
   }
 
+  String id;
   Product product;
   String productId;
   int quantity;
@@ -26,6 +27,7 @@ class CartProduct extends ChangeNotifier {
   }
 
   CartProduct.fromDcument(DocumentSnapshot d) {
+    id = d.documentID;
     productId = d.data['pid'] as String;
     quantity = d.data['quantity'] as int;
     size = d.data['size'] as String;
@@ -52,5 +54,13 @@ class CartProduct extends ChangeNotifier {
   void decrement() {
     quantity--;
     notifyListeners();
+  }
+
+  bool hasStrock() {
+    final size = itemSize;
+
+    if (size == null) return false;
+
+    return size.stock >= quantity;
   }
 }

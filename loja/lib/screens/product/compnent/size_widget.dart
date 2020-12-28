@@ -6,7 +6,7 @@ import 'package:loja/models/products.dart';
 class SizeWidget extends StatelessWidget {
   SizeWidget({this.size});
 
-  ItemSize size;
+  final ItemSize size;
 
   @override
   Widget build(BuildContext context) {
