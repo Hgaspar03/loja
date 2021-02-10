@@ -24,7 +24,9 @@ class CartManager extends ChangeNotifier {
       user.cartRef
           .add(cartProduct.toCartItemMap())
           .then((doc) => cartProduct.id = doc.documentID);
+      _onItemUpdate();
     }
+    notifyListeners();
   }
 
   Future<void> _loadCartItems() async {
@@ -44,18 +46,27 @@ class CartManager extends ChangeNotifier {
   }
 
   _onItemUpdate() {
-    for (final cartProduct in itens) {
+    productsPrice = 0.0;
+    for (var i = 0; i < itens.length; i++) {
+      final cartProduct = itens[i];
+
       if (cartProduct.quantity == 0) {
         removeFromCart(cartProduct);
+        i--;
+        continue;
       }
+      productsPrice += cartProduct.totalPrice;
+
       _updateCartProduct(cartProduct);
     }
+    print(productsPrice);
   }
 
   void _updateCartProduct(CartProduct cartProduct) {
-    user.cartRef
-        .document(cartProduct.id)
-        .updateData(cartProduct.toCartItemMap());
+    if (cartProduct.id != null)
+      user.cartRef
+          .document(cartProduct.id)
+          .updateData(cartProduct.toCartItemMap());
     notifyListeners();
   }
 

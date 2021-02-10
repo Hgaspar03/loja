@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:loja/models/cart_manager.dart';
+import 'package:provider/provider.dart';
 
 class PriceCard extends StatelessWidget {
   const PriceCard(this.bottonText, this.onPressed);
@@ -8,6 +10,9 @@ class PriceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartManager = context.watch<CartManager>();
+    final productPrice = cartManager.productsPrice;
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Padding(
@@ -27,7 +32,10 @@ class PriceCard extends StatelessWidget {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text('Subtotal'), Text('345 MZN')],
+              children: [
+                Text('Subtotal'),
+                Text('${productPrice.toStringAsFixed(2)} Mts')
+              ],
             ),
             const Divider(),
             SizedBox(
@@ -41,7 +49,7 @@ class PriceCard extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 Text(
-                  '345 MZN',
+                  '${productPrice.toStringAsFixed(2)} Mts',
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).primaryColor,
@@ -54,6 +62,7 @@ class PriceCard extends StatelessWidget {
             ),
             RaisedButton(
               onPressed: onPressed,
+              disabledColor: Theme.of(context).primaryColor.withAlpha(100),
               child: Text(bottonText),
               color: Theme.of(context).primaryColor,
               textColor: Colors.white,

@@ -26,16 +26,18 @@ class CartProduct extends ChangeNotifier {
     return product == null ? 0 : itemSize?.price ?? 0;
   }
 
+  num get totalPrice => unitPrice * quantity;
+
   CartProduct.fromDcument(DocumentSnapshot d) {
     id = d.documentID;
     productId = d.data['pid'] as String;
     quantity = d.data['quantity'] as int;
     size = d.data['size'] as String;
 
-    firestore
-        .document('products/$productId')
-        .get()
-        .then((d) => product = Product.fromDocument(d));
+    firestore.document('products/$productId').get().then((d) {
+      product = Product.fromDocument(d);
+      notifyListeners();
+    });
   }
 
   Map<String, dynamic> toCartItemMap() {
