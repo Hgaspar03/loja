@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loja/models/cart_manager.dart';
+import 'package:loja/models/home_manager.dart';
 import 'package:loja/models/product_manager.dart';
 import 'package:loja/models/products.dart';
 import 'package:loja/screens/base/base_screen.dart';
@@ -26,6 +27,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           lazy: false,
           create: (_) => UserManager(),
+        ),
+        Provider(
+          create: (_) => HomeManager(),
+          lazy: false,
         ),
         ChangeNotifierProxyProvider<UserManager, CartManager>(
           create: (_) => CartManager(),
