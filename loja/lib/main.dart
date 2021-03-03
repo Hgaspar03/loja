@@ -24,13 +24,13 @@ class MyApp extends StatelessWidget {
           create: (_) => ProductManager(),
           lazy: false,
         ),
-        ChangeNotifierProvider(
-          lazy: false,
-          create: (_) => UserManager(),
-        ),
         Provider(
           create: (_) => HomeManager(),
           lazy: false,
+        ),
+        ChangeNotifierProvider(
+          lazy: false,
+          create: (_) => UserManager(),
         ),
         ChangeNotifierProxyProvider<UserManager, CartManager>(
           create: (_) => CartManager(),

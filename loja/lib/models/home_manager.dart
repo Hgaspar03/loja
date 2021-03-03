@@ -3,16 +3,16 @@ import 'package:loja/models/section.dart';
 
 class HomeManager {
   HomeManager() {
-    _loadSeactions();
+    _loadSections();
   }
 
   List<Section> sections = [];
 
-  final Firestore _firestore = Firestore.instance;
+  final Firestore firestore = Firestore.instance;
 
-  Future<void> _loadSeactions() async {
-    sections.clear();
-    _firestore.collection('home').snapshots().listen((snapshot) {
+  Future<void> _loadSections() async {
+    firestore.collection('home').snapshots().listen((snapshot) {
+      sections.clear();
       for (final DocumentSnapshot document in snapshot.documents) {
         sections.add(Section.fromDocument(document));
       }
