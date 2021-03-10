@@ -17,5 +17,6 @@ class HomeManager {
         sections.add(Section.fromDocument(document));
       }
     });
+    print(sections);
   }
 }
