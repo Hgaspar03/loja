@@ -4,6 +4,7 @@ import 'package:loja/common/CustomDrawer/custom_drawer.dart';
 import 'package:loja/models/home_manager.dart';
 import 'package:loja/screens/home/components/section_list.dart';
 import 'package:provider/provider.dart';
+import 'package:loja/screens/home/components/section_staggred.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -48,7 +49,7 @@ class HomeScreen extends StatelessWidget {
                     case 'List':
                       return SectionList(section);
                     case 'Staggered':
-                      return Container();
+                      return SectionStaggred(section);
                     default:
                       return Container();
                   }
@@ -64,3 +65,5 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
+class SessionStaggered {}
