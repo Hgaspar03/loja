@@ -33,7 +33,7 @@ class SectionList extends StatelessWidget {
                     ),
                 itemCount: section.items.length),
           )
-        ],
+        ], 
       ),
     );
   }
