@@ -6,6 +6,8 @@ import 'package:loja/screens/home/components/section_list.dart';
 import 'package:provider/provider.dart';
 import 'package:loja/screens/home/components/section_staggred.dart';
 
+import 'components/section_staggred.dart';
+
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

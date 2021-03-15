@@ -9,15 +9,15 @@ class HomeManager extends ChangeNotifier {
 
   List<Section> sections = [];
 
-  final Firestore firestore = Firestore.instance;
+  final Firestore _firestore = Firestore.instance;
 
   Future<void> _loadSections() async {
-    firestore.collection('home').snapshots().listen((snapshot) {
+    _firestore.collection('home').snapshots().listen((snapshot) {
       sections.clear();
       for (final DocumentSnapshot document in snapshot.documents) {
         sections.add(Section.fromDocument(document));
       }
+      notifyListeners();
     });
-    notifyListeners();
   }
 }
