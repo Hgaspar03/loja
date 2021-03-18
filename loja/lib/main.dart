@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:loja/models/admin_users_manager.dart';
 import 'package:loja/models/cart_manager.dart';
 import 'package:loja/models/home_manager.dart';
 import 'package:loja/models/product_manager.dart';
 import 'package:loja/models/products.dart';
 import 'package:loja/screens/base/base_screen.dart';
 import 'package:loja/screens/cart_screen.dart';
+import 'package:loja/screens/edit_product/edit_product_screen.dart';
 import 'package:loja/screens/login/lgin_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:loja/models/user_manager.dart';
@@ -39,6 +41,13 @@ class MyApp extends StatelessWidget {
             return cartManager..updateUser(userMnanager);
           },
           lazy: false,
+        ),
+        ChangeNotifierProxyProvider<UserManager, AdminUsersManager>(
+          create: (_) => AdminUsersManager(),
+          lazy: false,
+          update: (_, usermanager, adminUsersmanager) {
+            return adminUsersmanager..updateUser(usermanager);
+          },
         )
       ],
       child: MaterialApp(
@@ -64,6 +73,11 @@ class MyApp extends StatelessWidget {
             case '/product':
               return MaterialPageRoute(
                   builder: (_) => ProductScreen(settings.arguments as Product));
+              break;
+            case '/edit_product':
+              return MaterialPageRoute(
+                  builder: (_) =>
+                      EditProductScreen(settings.arguments as Product));
               break;
             case '/base':
             default:
