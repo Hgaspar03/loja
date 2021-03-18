@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loja/models/products.dart';
+import 'package:loja/screens/edit_product/components/image_source_sheet.dart';
 
 class ImageForm extends StatelessWidget {
   final Product product;
@@ -38,7 +40,35 @@ class ImageForm extends StatelessWidget {
                   )
                 ],
               );
-            }).toList(),
+            }).toList()
+              ..add(
+                Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Material(
+                      color: Colors.grey[100],
+                      child: IconButton(
+                        iconSize: 54,
+                        color: Theme.of(context).primaryColor,
+                        icon: Icon(Icons.add_a_photo),
+                        onPressed: () {
+                          if (Platform.isAndroid)
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (_) => ImageSourceSheet(),
+                            );
+                          else {
+                            showCupertinoModalPopup(
+                              context: context,
+                              builder: (_) => ImageSourceSheet(),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             dotSize: 6,
             dotColor: Theme.of(context).primaryColor,
             dotBgColor: Colors.transparent,
