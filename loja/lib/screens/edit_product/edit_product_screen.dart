@@ -59,11 +59,24 @@ class EditProductScreen extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 16, bottom: 8),
                     child: Text(
                       "Descricao",
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     ),
+                  ),
+                  TextFormField(
+                    initialValue: product.description,
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                    decoration: const InputDecoration(
+                        hintText: "Descricao", border: InputBorder.none),
+                    maxLines: null,
+                    validator: (desc) {
+                      if (desc.length < 10) {
+                        return 'Descricao muito curta';
+                      }
+                      return null;
+                    },
                   ),
                   ElevatedButton(
                     style: ButtonStyle(),

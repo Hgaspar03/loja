@@ -75,7 +75,7 @@ class ProductScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '325 MZN',
+                    '${product.basePrice.toStringAsFixed(2)} MZN',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,

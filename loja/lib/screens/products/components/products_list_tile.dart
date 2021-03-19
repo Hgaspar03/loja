@@ -43,7 +43,7 @@ class ProductsListTile extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '325 MTN',
+                    '${product.basePrice.toStringAsFixed(2)} MTN',
                     style: TextStyle(
                         color: Theme.of(context).primaryColor, fontSize: 15),
                   ),
