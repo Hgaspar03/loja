@@ -46,7 +46,7 @@ class ImageForm extends StatelessWidget {
                       Align(
                         alignment: Alignment.topRight,
                         child: IconButton(
-                            color: Colors.red,
+                            color: Theme.of(context).primaryColor,
                             onPressed: () {
                               state.value.remove(image);
                               state.didChange(state.value);

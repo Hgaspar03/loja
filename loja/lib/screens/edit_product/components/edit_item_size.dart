@@ -3,9 +3,11 @@ import 'package:loja/common/custom_icon_button.dart';
 import 'package:loja/models/iten_size.dart';
 
 class EditItemSize extends StatelessWidget {
-  const EditItemSize(this.size);
+  const EditItemSize({this.size, this.onRemove});
 
   final ItemSize size;
+
+  final VoidCallback onRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +48,7 @@ class EditItemSize extends StatelessWidget {
             isDense: true,
             suffixText: 'Mt',
           ),
-          keyboardType: TextInputType.number,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
         ),
       ),
       CustonIconButton(
@@ -60,6 +62,7 @@ class EditItemSize extends StatelessWidget {
       CustonIconButton(
         color: Colors.red,
         iconData: Icons.remove,
+        onTap: onRemove,
       )
     ]);
   }

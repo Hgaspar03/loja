@@ -18,7 +18,6 @@ class SizesForm extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                flex: 30,
                 child: Text(
                   'Tamanhos',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
@@ -29,6 +28,7 @@ class SizesForm extends StatelessWidget {
                 iconData: Icons.add_circle,
                 onTap: () {
                   state.value.add(ItemSize());
+                  state.didChange(state.value);
                 },
               ),
             ],
@@ -36,7 +36,13 @@ class SizesForm extends StatelessWidget {
           Column(
             children: state.value.map(
               (size) {
-                return EditItemSize(size);
+                return EditItemSize(
+                  size: size,
+                  onRemove: () {
+                    state.value.remove(size);
+                    state.didChange(state.value);
+                  },
+                );
               },
             ).toList(),
           ),
