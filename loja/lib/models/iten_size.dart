@@ -5,6 +5,8 @@ class ItemSize {
     stock = map['stock'] as int;
   }
 
+  ItemSize();
+
   String name;
   num price;
   int stock;

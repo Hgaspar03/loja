@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loja/models/products.dart';
 import 'package:loja/screens/edit_product/components/images_form.dart';
+import 'package:loja/screens/edit_product/components/sizes_form.dart';
 
 class EditProductScreen extends StatelessWidget {
   EditProductScreen(this.product);
@@ -78,6 +79,7 @@ class EditProductScreen extends StatelessWidget {
                       return null;
                     },
                   ),
+                  SizesForm(product),
                   ElevatedButton(
                     style: ButtonStyle(),
                     onPressed: () {
