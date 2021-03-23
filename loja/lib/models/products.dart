@@ -3,6 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:loja/models/iten_size.dart';
 
 class Product extends ChangeNotifier {
+  final Firestore firestore = Firestore.instance;
+
+  DocumentReference get firestoreRef => firestore.document('products/$id');
+
   Product.fromDocument(DocumentSnapshot doc) {
     id = doc.documentID;
     name = doc['name'] as String;
@@ -12,12 +16,17 @@ class Product extends ChangeNotifier {
         .map((sizesMap) => ItemSize.fromMap(sizesMap as Map<String, dynamic>))
         .toList();
   }
+  Product({this.id, this.name, this.description, this.images, this.sizes}) {
+    images = images ?? [];
+    sizes = sizes ?? [];
+  }
 
   String id;
   String name;
   String description;
   List<String> images;
   List<ItemSize> sizes;
+  List<dynamic> newImages;
 
   ItemSize _selectedSize;
 
@@ -52,5 +61,33 @@ class Product extends ChangeNotifier {
 
   ItemSize findSize(String size) {
     return sizes.firstWhere((s) => s.name == size);
+  }
+
+  Product clone() {
+    return Product(
+        id: this.id,
+        name: name,
+        description: description,
+        images: List.from(images),
+        sizes: sizes.map((e) => e.clone()).toList());
+  }
+
+  Future<void> save() async {
+    final Map<String, dynamic> data = {
+      'name': name,
+      'description': description,
+      'sizes': exportSizeList()
+    };
+
+    if (id == null) {
+      final doc = await firestore.collection('products').add(data);
+      id = doc.documentID;
+    } else {
+      await firestoreRef.updateData(data);
+    }
+  }
+
+  List<Map<String, dynamic>> exportSizeList() {
+    return sizes.map((size) => size.toMap()).toList();
   }
 }

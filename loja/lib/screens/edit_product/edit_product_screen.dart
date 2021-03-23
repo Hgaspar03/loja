@@ -4,9 +4,13 @@ import 'package:loja/screens/edit_product/components/images_form.dart';
 import 'package:loja/screens/edit_product/components/sizes_form.dart';
 
 class EditProductScreen extends StatelessWidget {
-  EditProductScreen(this.product);
+  EditProductScreen(Product p)
+      : editing = p != null,
+        product = p != null ? p.clone() : Product();
 
   final Product product;
+
+  final bool editing;
 
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
@@ -14,7 +18,7 @@ class EditProductScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Editar Anuncio"),
+        title: Text(editing ? 'Editar Produto' : 'Criar Produto'),
         centerTitle: true,
       ),
       backgroundColor: Colors.white,
@@ -41,6 +45,7 @@ class EditProductScreen extends StatelessWidget {
                       }
                       return null;
                     },
+                    onSaved: (name) => product.name = name,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
@@ -78,15 +83,23 @@ class EditProductScreen extends StatelessWidget {
                       }
                       return null;
                     },
+                    onSaved: (desc) => product.description = desc,
                   ),
                   SizesForm(product),
                   ElevatedButton(
-                    style: ButtonStyle(),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                          return Theme.of(context)
+                              .primaryColor
+                              .withOpacity(0.6);
+                        },
+                      ),
+                    ),
                     onPressed: () {
                       if (formkey.currentState.validate()) {
-                        print("Valido");
-                      } else {
-                        print("Invalido");
+                        formkey.currentState.save();
+                        product.save();
                       }
                     },
                     child: const Text("Salvar"),

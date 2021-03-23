@@ -20,6 +20,7 @@ class ImageForm extends StatelessWidget {
         return null;
       },
       initialValue: List.from(product.images),
+      onSaved: (images) => product.newImages = images,
       builder: (state) {
         void onImageSelected(File file) {
           state.value.add(file);

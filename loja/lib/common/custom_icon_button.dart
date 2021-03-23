@@ -18,7 +18,7 @@ class CustonIconButton extends StatelessWidget {
             padding: EdgeInsets.all(5),
             child: Icon(
               iconData,
-              color: color,
+              color: onTap != null ? color : Colors.grey[400],
             ),
           ),
         ),
