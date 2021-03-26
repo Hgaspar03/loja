@@ -128,8 +128,8 @@ class ProductScreen extends StatelessWidget {
                             textColor: Colors.white,
                             child: Text(
                               userManager.isLoggedIn
-                                  ? 'Adicionar aoo carrinho'
-                                  : 'Entre para comprar',
+                                  ? 'Adicionar ao Carrinho'
+                                  : 'Entre Para Comprar',
                               style: TextStyle(fontSize: 18),
                             ),
                             onPressed: product.selectedSize != null

@@ -100,6 +100,7 @@ class EditProductScreen extends StatelessWidget {
                       if (formkey.currentState.validate()) {
                         formkey.currentState.save();
                         product.save();
+                        Navigator.of(context).pop();
                       }
                     },
                     child: const Text("Salvar"),

@@ -1,11 +1,17 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:loja/models/iten_size.dart';
+import 'package:uuid/uuid.dart';
 
 class Product extends ChangeNotifier {
   final Firestore firestore = Firestore.instance;
+  FirebaseStorage storage = FirebaseStorage.instance;
 
   DocumentReference get firestoreRef => firestore.document('products/$id');
+  StorageReference get storageRf => storage.ref().child('products').child(id);
 
   Product.fromDocument(DocumentSnapshot doc) {
     id = doc.documentID;
@@ -26,7 +32,9 @@ class Product extends ChangeNotifier {
   String description;
   List<String> images;
   List<ItemSize> sizes;
-  List<dynamic> newImages;
+  List<dynamic> newImages = [];
+
+  final List<String> updateImages = [];
 
   ItemSize _selectedSize;
 
@@ -85,6 +93,30 @@ class Product extends ChangeNotifier {
     } else {
       await firestoreRef.updateData(data);
     }
+    for (final newImage in newImages) {
+      if (images.contains(newImage)) {
+        updateImages.add(newImage);
+      } else {
+        final StorageUploadTask task =
+            storageRf.child(Uuid().v1()).putFile(newImage as File);
+        final StorageTaskSnapshot snapshot = await task.onComplete;
+        final String url = await snapshot.ref.getDownloadURL() as String;
+        updateImages.add(url);
+      }
+    }
+
+    for (final image in images) {
+      if (!newImages.contains(image)) {
+        try {
+          final ref = await storage.getReferenceFromUrl(image);
+          await ref.delete();
+        } catch (e) {
+          //ignore;
+        }
+      }
+    }
+
+    await firestoreRef.updateData({'images': updateImages});
   }
 
   List<Map<String, dynamic>> exportSizeList() {
