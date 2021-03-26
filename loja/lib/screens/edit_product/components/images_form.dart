@@ -12,102 +12,104 @@ class ImageForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FormField<List<dynamic>>(
-      validator: (images) {
-        if (images != null && images.isEmpty) {
-          return "Insira pelo menos uma imagem";
-        }
-        return null;
-      },
-      initialValue: List.from(product.images),
-      onSaved: (images) => product.newImages = images,
-      builder: (state) {
-        void onImageSelected(File file) {
-          state.value.add(file);
-          state.didChange(state.value);
-          Navigator.of(context).pop();
-        }
+    return SafeArea(
+      child: FormField<List<dynamic>>(
+        validator: (images) {
+          if (images != null && images.isEmpty) {
+            return "Insira pelo menos uma imagem";
+          }
+          return null;
+        },
+        initialValue: List.from(product.images),
+        onSaved: (images) => product.newImages = images,
+        builder: (state) {
+          void onImageSelected(File file) {
+            state.value.add(file);
+            state.didChange(state.value);
+            Navigator.of(context).pop();
+          }
 
-        return Column(
-          children: [
-            AspectRatio(
-              aspectRatio: 1,
-              child: Carousel(
-                images: state.value.map((image) {
-                  return Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      if (image is String)
-                        Image.network(
-                          image,
-                          fit: BoxFit.cover,
-                        )
-                      else
-                        Image.file(image as File, fit: BoxFit.cover),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: IconButton(
-                            color: Theme.of(context).primaryColor,
-                            onPressed: () {
-                              state.value.remove(image);
-                              state.didChange(state.value);
-                            },
-                            icon: Icon(CupertinoIcons.trash)),
-                      )
-                    ],
-                  );
-                }).toList()
-                  ..add(
-                    Stack(
+          return Column(
+            children: [
+              AspectRatio(
+                aspectRatio: 1,
+                child: Carousel(
+                  images: state.value.map((image) {
+                    return Stack(
                       fit: StackFit.expand,
                       children: [
-                        Material(
-                          color: Colors.grey[100],
+                        if (image is String)
+                          Image.network(
+                            image,
+                            fit: BoxFit.cover,
+                          )
+                        else
+                          Image.file(image as File, fit: BoxFit.cover),
+                        Align(
+                          alignment: Alignment.topRight,
                           child: IconButton(
-                            iconSize: 54,
-                            color: Theme.of(context).primaryColor,
-                            icon: Icon(Icons.add_a_photo),
-                            onPressed: () {
-                              if (Platform.isAndroid)
-                                showModalBottomSheet(
-                                  context: context,
-                                  builder: (_) => ImageSourceSheet(
-                                    onImageSelect: onImageSelected,
-                                  ),
-                                );
-                              else {
-                                showCupertinoModalPopup(
-                                  context: context,
-                                  builder: (_) => ImageSourceSheet(
-                                    onImageSelect: onImageSelected,
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                        ),
+                              color: Theme.of(context).primaryColor,
+                              onPressed: () {
+                                state.value.remove(image);
+                                state.didChange(state.value);
+                              },
+                              icon: Icon(CupertinoIcons.trash)),
+                        )
                       ],
+                    );
+                  }).toList()
+                    ..add(
+                      Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Material(
+                            color: Colors.grey[100],
+                            child: IconButton(
+                              iconSize: 54,
+                              color: Theme.of(context).primaryColor,
+                              icon: Icon(Icons.add_a_photo),
+                              onPressed: () {
+                                if (Platform.isAndroid)
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: (_) => ImageSourceSheet(
+                                      onImageSelect: onImageSelected,
+                                    ),
+                                  );
+                                else {
+                                  showCupertinoModalPopup(
+                                    context: context,
+                                    builder: (_) => ImageSourceSheet(
+                                      onImageSelect: onImageSelected,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                dotSize: 6,
-                dotColor: Theme.of(context).primaryColor,
-                dotBgColor: Colors.transparent,
-                autoplay: false,
-                dotSpacing: 15,
-              ),
-            ),
-            if (state.hasError)
-              Container(
-                alignment: Alignment.centerLeft,
-                margin: const EdgeInsets.only(top: 16, left: 16),
-                child: Text(
-                  state.errorText,
-                  style: TextStyle(color: Colors.red, fontSize: 12),
+                  dotSize: 6,
+                  dotColor: Theme.of(context).primaryColor,
+                  dotBgColor: Colors.transparent,
+                  autoplay: false,
+                  dotSpacing: 15,
                 ),
-              )
-          ],
-        );
-      },
+              ),
+              if (state.hasError)
+                Container(
+                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.only(top: 16, left: 16),
+                  child: Text(
+                    state.errorText,
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                )
+            ],
+          );
+        },
+      ),
     );
   }
 }
