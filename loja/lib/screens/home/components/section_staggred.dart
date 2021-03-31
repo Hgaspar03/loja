@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:loja/models/home_manager.dart';
 import 'package:loja/models/section.dart';
+import 'package:loja/screens/home/components/add_tile_widget.dart';
 import 'package:loja/screens/home/components/item_tile.dart';
 import 'package:loja/screens/home/components/section_header.dart';
+import 'package:provider/provider.dart';
 
 class SectionStaggred extends StatelessWidget {
   SectionStaggred(this.section);
@@ -11,6 +14,7 @@ class SectionStaggred extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final homemanager = context.watch<HomeManager>();
     return Container(
       margin: const EdgeInsets.all(16),
       child: Column(
@@ -21,12 +25,18 @@ class SectionStaggred extends StatelessWidget {
             padding: EdgeInsets.zero,
             shrinkWrap: true,
             crossAxisCount: 4,
-            itemCount: section.items.length,
+            itemCount: homemanager.editing
+                ? section.items.length + 1
+                : section.items.length,
             itemBuilder: (_, index) {
-              return ItemTile(section.items[index]);
+              if (index < section.items.length)
+                return ItemTile(section.items[index]);
+              else
+                return AddTileWidget();
             },
-            staggeredTileBuilder: (index) =>
-                StaggeredTile.count(2, index.isEven ? 2 : 1),
+            staggeredTileBuilder: (index) {
+              return StaggeredTile.count(2, index.isEven ? 2 : 1);
+            },
             mainAxisSpacing: 4,
             crossAxisSpacing: 4,
           )

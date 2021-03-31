@@ -49,4 +49,9 @@ class HomeManager extends ChangeNotifier {
     _editingSections.add(section);
     notifyListeners();
   }
+
+  void removeSection(Section section) {
+    _editingSections.remove(section);
+    notifyListeners();
+  }
 }
