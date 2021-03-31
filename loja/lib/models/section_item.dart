@@ -3,6 +3,8 @@ class SectionItem {
     image = map['image'] as String;
     product = map['product'] as String;
   }
+
+  SectionItem({this.image, this.product});
   String image;
 
   String product;
@@ -10,5 +12,9 @@ class SectionItem {
   @override
   String toString() {
     return 'SectionItem: $image';
+  }
+
+  SectionItem clone() {
+    return SectionItem(image: image, product: product);
   }
 }

@@ -10,6 +10,10 @@ class Section {
         .toList();
   }
 
+  Section({this.name, this.type, this.items}) {
+    items = items ?? [];
+  }
+
   String name;
   String type;
   List<SectionItem> items;
@@ -17,5 +21,10 @@ class Section {
   @override
   String toString() {
     return "section[name: $name, type: $type, items: $items]";
+  }
+
+  Section clone() {
+    return Section(
+        name: name, type: type, items: items.map((e) => e.clone()).toList());
   }
 }
