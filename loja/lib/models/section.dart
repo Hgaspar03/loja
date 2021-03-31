@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'section_item.dart';
 
-class Section {
+class Section extends ChangeNotifier {
   Section.fromDocument(DocumentSnapshot doc) {
     name = doc.data['name'] as String;
     type = doc.data['type'] as String;
@@ -26,5 +27,10 @@ class Section {
   Section clone() {
     return Section(
         name: name, type: type, items: items.map((e) => e.clone()).toList());
+  }
+
+  void addItem(SectionItem sectionItem) {
+    items.add(sectionItem);
+    notifyListeners();
   }
 }

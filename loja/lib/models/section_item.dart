@@ -5,7 +5,7 @@ class SectionItem {
   }
 
   SectionItem({this.image, this.product});
-  String image;
+  dynamic image;
 
   String product;
 
