@@ -1,10 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:loja/models/home_manager.dart';
 import 'package:loja/models/product_manager.dart';
+import 'package:loja/models/products.dart';
+import 'package:loja/models/section.dart';
 import 'package:loja/models/section_item.dart';
 import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:provider/provider.dart';
 
 class ItemTile extends StatelessWidget {
   const ItemTile(this.item);
@@ -13,6 +17,8 @@ class ItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final homeManager = context.watch<HomeManager>();
+
     return GestureDetector(
         onTap: () {
           if (item.product != null) {
@@ -23,6 +29,57 @@ class ItemTile extends StatelessWidget {
             }
           }
         },
+        onLongPress: !homeManager.editing
+            ? null
+            : () {
+                final product = context
+                    .read<ProductManager>()
+                    .findProductByID(item.product);
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Editar Item'),
+                      content: product != null
+                          ? ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              title: Text(product.name),
+                              subtitle: Text(
+                                  '${product.basePrice.toStringAsFixed(2)}'),
+                              leading: Image.network(product.images.first),
+                            )
+                          : null,
+                      actions: [
+                        FlatButton(
+                          onPressed: () async {
+                            if (product != null) {
+                              item.product = null;
+                            } else {
+                              final Product product =
+                                  await Navigator.of(context)
+                                      .pushNamed('/select_product') as Product;
+                              item.product = product?.id;
+                            }
+
+                            Navigator.of(context).pop();
+                          },
+                          textColor: Colors.blue,
+                          child: Text(
+                              product != null ? 'Desvincular' : 'Vincular'),
+                        ),
+                        FlatButton(
+                          onPressed: () {
+                            context.read<Section>().removeItem(item);
+                            Navigator.of(context).pop();
+                          },
+                          textColor: Colors.red,
+                          child: const Text('Remover'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
         child: AspectRatio(
           aspectRatio: 1,
           child: item.image is String

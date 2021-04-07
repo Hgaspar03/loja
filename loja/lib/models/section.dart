@@ -33,4 +33,9 @@ class Section extends ChangeNotifier {
     items.add(sectionItem);
     notifyListeners();
   }
+
+  void removeItem(SectionItem item) {
+    items.remove(item);
+    notifyListeners();
+  }
 }
