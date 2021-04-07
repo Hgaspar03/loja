@@ -8,7 +8,6 @@ import 'package:loja/models/section.dart';
 import 'package:loja/models/section_item.dart';
 import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:provider/provider.dart';
 
 class ItemTile extends StatelessWidget {
   const ItemTile(this.item);
@@ -37,7 +36,7 @@ class ItemTile extends StatelessWidget {
                     .findProductByID(item.product);
                 showDialog(
                   context: context,
-                  builder: (context) {
+                  builder: (_) {
                     return AlertDialog(
                       title: const Text('Editar Item'),
                       content: product != null
