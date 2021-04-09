@@ -73,8 +73,8 @@ class Section extends ChangeNotifier {
     return _error == null;
   }
 
-  Future<void> save() async {
-    Map<String, dynamic> data = {'name': name, 'type': type};
+  Future<void> save(int pos) async {
+    Map<String, dynamic> data = {'name': name, 'type': type, 'pos': pos};
 
     if (id == null) {
       final doc = await firestore.collection('home').add(data);
@@ -109,5 +109,17 @@ class Section extends ChangeNotifier {
       'items': items.map((e) => e.toMap()).toList(),
     };
     await firestoreRef.updateData(itemdata);
+  }
+
+  Future<void> delete() async {
+    await firestoreRef.delete();
+    for (final item in items) {
+      try {
+        final ref = await storage.getReferenceFromUrl(item.image as String);
+        await ref.delete();
+      } catch (e) {
+        //
+      }
+    }
   }
 }

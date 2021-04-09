@@ -10,11 +10,12 @@ class HomeManager extends ChangeNotifier {
   final List<Section> _sections = [];
   List<Section> _editingSections = [];
   bool editing = false;
+  bool loading = false;
 
   final Firestore _firestore = Firestore.instance;
 
   Future<void> _loadSections() async {
-    _firestore.collection('home').snapshots().listen((snapshot) {
+    _firestore.collection('home').orderBy('pos').snapshots().listen((snapshot) {
       _sections.clear();
       for (final DocumentSnapshot document in snapshot.documents) {
         _sections.add(Section.fromDocument(document));
@@ -38,10 +39,22 @@ class HomeManager extends ChangeNotifier {
 
     if (!valid) return;
 
+    loading = true;
+    notifyListeners();
+
+    int pos = 0;
     for (final section in _editingSections) {
-      await section.save();
+      await section.save(pos);
+      pos++;
     }
 
+    for (final section in List.from(sections)) {
+      if (_editingSections.any((element) => element.id == section.id)) {
+        await section.delete();
+      }
+    }
+
+    loading = false;
     editing = false;
     notifyListeners();
   }
