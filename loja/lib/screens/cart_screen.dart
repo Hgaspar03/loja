@@ -21,8 +21,13 @@ class CartScreen extends StatelessWidget {
                     .map((cartProduct) => CartTile(cartProduct))
                     .toList(),
               ),
-              PriceCard('Continuar para entrega',
-                  cartManager.isCartValid ? () {} : null)
+              PriceCard(
+                  'Continuar para entrega',
+                  cartManager.isCartValid
+                      ? () {
+                          Navigator.of(context).pushNamed("/adress");
+                        }
+                      : null)
             ],
           );
         },
