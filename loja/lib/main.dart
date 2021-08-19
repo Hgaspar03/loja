@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:loja/models/admin_users_manager.dart';
 import 'package:loja/models/cart_manager.dart';
 import 'package:loja/models/home_manager.dart';
@@ -16,6 +17,8 @@ import 'package:loja/screens/signup/signup_screen.dart';
 import 'package:loja/screens/product/product_screen.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
