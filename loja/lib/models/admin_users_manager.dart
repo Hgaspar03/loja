@@ -6,9 +6,9 @@ import 'package:loja/models/user.dart';
 import 'package:loja/models/user_manager.dart';
 
 class AdminUsersManager extends ChangeNotifier {
-  List<User> users = [];
+  List<LocalUser> users = [];
 
-  Firestore firestore = Firestore.instance;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   StreamSubscription _subscription;
 
@@ -25,7 +25,7 @@ class AdminUsersManager extends ChangeNotifier {
   void _listenToUsers() {
     _subscription =
         firestore.collection('users').snapshots().listen((snapshot) {
-      users = snapshot.documents.map((e) => User.fromDocument(e)).toList();
+      users = snapshot.docs.map((e) => LocalUser.fromDocument(e)).toList();
       users
           .sort((a, b) => a.nome.toLowerCase().compareTo(b.nome.toLowerCase()));
     });

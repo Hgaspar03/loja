@@ -8,10 +8,10 @@ import 'section_item.dart';
 
 class Section extends ChangeNotifier {
   Section.fromDocument(DocumentSnapshot doc) {
-    id = doc.documentID;
-    name = doc.data['name'] as String;
-    type = doc.data['type'] as String;
-    items = (doc.data['items'] as List)
+    id = doc.id;
+    name = doc.data()['name'] as String;
+    type = doc.data()['type'] as String;
+    items = (doc.data()['items'] as List)
         .map((e) => SectionItem.fromMap(e as Map<String, dynamic>))
         .toList();
   }
@@ -27,9 +27,9 @@ class Section extends ChangeNotifier {
   List<SectionItem> items;
   List<SectionItem> originalItems;
   String _error;
-  final Firestore firestore = Firestore.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
-  DocumentReference get firestoreRef => firestore.document('home/$id');
+  DocumentReference get firestoreRef => firestore.doc('home/$id');
   StorageReference get storageRef => storage.ref().child('home/$id');
 
   String get error => _error;
@@ -78,9 +78,9 @@ class Section extends ChangeNotifier {
 
     if (id == null) {
       final doc = await firestore.collection('home').add(data);
-      id = doc.documentID;
+      id = doc.id;
     } else {
-      await firestoreRef.updateData(data);
+      await firestoreRef.update(data);
     }
 
     for (final item in items) {
@@ -108,7 +108,7 @@ class Section extends ChangeNotifier {
     final Map<String, dynamic> itemdata = {
       'items': items.map((e) => e.toMap()).toList(),
     };
-    await firestoreRef.updateData(itemdata);
+    await firestoreRef.update(itemdata);
   }
 
   Future<void> delete() async {

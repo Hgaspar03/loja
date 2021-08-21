@@ -1,16 +1,20 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:loja/models/user.dart';
 import 'package:loja/common/helpers/firebase_errors.dart';
+import 'package:loja/models/user.dart';
 
 class UserManager extends ChangeNotifier {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  User user;
-  Firestore firestore = Firestore.instance;
+
+  LocalUser user;
+
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   UserManager() {
+    Firebase.initializeApp();
     _loadCurrentUser();
   }
 
@@ -18,11 +22,12 @@ class UserManager extends ChangeNotifier {
   bool get loading => _loading;
   bool get isLoggedIn => user != null;
 
-  Future<void> signIn({User user, Function onFail, Function onSucess}) async {
+  Future<void> signIn(
+      {LocalUser user, Function onFail, Function onSucess}) async {
     loading = true;
     try {
-      AuthResult result = await auth.signInWithEmailAndPassword(
-          email: user.email, password: user.password);
+      UserCredential result = (await auth.signInWithEmailAndPassword(
+          email: user.email, password: user.password));
 
       await _loadCurrentUser(firebaseUser: result.user);
 
@@ -34,10 +39,11 @@ class UserManager extends ChangeNotifier {
     loading = false;
   }
 
-  Future<void> signUp({User user, Function onFail, Function onSucess}) async {
+  Future<void> signUp(
+      {LocalUser user, Function onFail, Function onSucess}) async {
     loading = true;
     try {
-      AuthResult result = await auth.createUserWithEmailAndPassword(
+      UserCredential result = await auth.createUserWithEmailAndPassword(
           email: user.email, password: user.password);
 
       user.id = result.user.uid;
@@ -56,21 +62,20 @@ class UserManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _loadCurrentUser({FirebaseUser firebaseUser}) async {
-    FirebaseUser currentUser = firebaseUser ?? auth.currentUser();
+  // ignore: deprecated_member_use
+  Future<void> _loadCurrentUser({User firebaseUser}) async {
+    User currentUser = firebaseUser ?? auth.currentUser;
     if (currentUser != null) {
       final DocumentSnapshot docUser =
-          await firestore.collection('users').document(currentUser.uid).get();
-      user = User.fromDocument(docUser);
+          await firestore.collection('users').doc(currentUser.uid).get();
+      user = LocalUser.fromDocument(docUser);
 
-
-      var docAdmin =
-          await firestore.collection('admins').document(user.id).get();
+      var docAdmin = await firestore.collection('admins').doc(user.id).get();
 
       if (docAdmin.exists) {
         user.admin = true;
       }
-      
+
       notifyListeners();
     }
   }

@@ -93,16 +93,31 @@
       // Service workers not supported. Just drop the <script> tag.
       loadMainDartJs();
     }
-
-    
   </script>
-  <script src="https://www.gstatic.com/firebasejs/8.3.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-storage.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-messaging.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-analytics.js"></script>
-  
-  
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-messaging.js"></script>
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyBHsmuEiLJoflxzez7XKlRLh06vNLXgLmQ",
+    authDomain: "lojaonline-446c9.firebaseapp.com",
+    databaseURL: "https://lojaonline-446c9.firebaseio.com",
+    projectId: "lojaonline-446c9",
+    storageBucket: "loja.appspot.com",
+    messagingSenderId: "986095262013",
+    appId: "1:986095262013:android:37bfd6d4d8a7fdc62f4d54",
+    measurementId: "G-...",
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+</script>
+
+<script src="main.dart.js" type="application/javascript"></script>
+
+  </script>
 </body>
 </html>

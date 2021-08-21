@@ -2,15 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:loja/models/cart_product.dart';
 import 'package:loja/models/products.dart';
-import 'package:loja/models/user.dart';
 import 'package:loja/models/user_manager.dart';
+import 'package:loja/models/user.dart';
 
 class CartManager extends ChangeNotifier {
   List<CartProduct> itens = [];
 
   num productsPrice = 0.0;
 
-  User user;
+  LocalUser user;
 
   addToCart(Product product) {
     try {
@@ -31,7 +31,7 @@ class CartManager extends ChangeNotifier {
 
   Future<void> _loadCartItems() async {
     final QuerySnapshot cartSnap = await user.cartRef.getDocuments();
-    itens = cartSnap.documents
+    itens = cartSnap.docs
         .map((d) => CartProduct.fromDcument(d)..addListener(_onItemUpdate))
         .toList();
   }

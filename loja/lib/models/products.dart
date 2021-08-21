@@ -7,18 +7,18 @@ import 'package:loja/models/iten_size.dart';
 import 'package:uuid/uuid.dart';
 
 class Product extends ChangeNotifier {
-  final Firestore firestore = Firestore.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseStorage storage = FirebaseStorage.instance;
 
-  DocumentReference get firestoreRef => firestore.document('products/$id');
+  DocumentReference get firestoreRef => firestore.doc('products/$id');
   StorageReference get storageRf => storage.ref().child('products').child(id);
 
   Product.fromDocument(DocumentSnapshot doc) {
-    id = doc.documentID;
+    id = doc.id;
     name = doc['name'] as String;
     description = doc['description'] as String;
     images = List<String>.from(doc['images'] as List<dynamic>);
-    sizes = (doc.data['sizes'] as List<dynamic> ?? [])
+    sizes = (doc.data()['sizes'] as List<dynamic> ?? [])
         .map((sizesMap) => ItemSize.fromMap(sizesMap as Map<String, dynamic>))
         .toList();
   }
@@ -97,7 +97,7 @@ class Product extends ChangeNotifier {
 
     if (id == null) {
       final doc = await firestore.collection('products').add(data);
-      id = doc.documentID;
+      id = doc.id;
     } else {
       await firestoreRef.updateData(data);
     }

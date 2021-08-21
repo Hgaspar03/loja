@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class SignUpScreen extends StatelessWidget {
   final GlobalKey<FormState> formstate = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  final User user = User();
+  final LocalUser user = LocalUser();
 
   @override
   Widget build(BuildContext context) {

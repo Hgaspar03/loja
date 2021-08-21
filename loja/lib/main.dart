@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:loja/models/admin_users_manager.dart';
 import 'package:loja/models/cart_manager.dart';
 import 'package:loja/models/home_manager.dart';
 import 'package:loja/models/product_manager.dart';
 import 'package:loja/models/products.dart';
+import 'package:loja/screens/adress/adress_screen.dart';
 import 'package:loja/screens/base/base_screen.dart';
 import 'package:loja/screens/cart_screen.dart';
 import 'package:loja/screens/edit_product/edit_product_screen.dart';
@@ -15,6 +17,8 @@ import 'package:loja/screens/signup/signup_screen.dart';
 import 'package:loja/screens/product/product_screen.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -83,6 +87,11 @@ class MyApp extends StatelessWidget {
             case '/select_product':
               return MaterialPageRoute(builder: (_) => SelectProductScreen());
               break;
+
+            case '/adress':
+              return MaterialPageRoute(builder: (_) => AdressScreen());
+              break;
+
             case '/base':
             default:
               return MaterialPageRoute(builder: (_) => BaseScreen());
