@@ -11,6 +11,7 @@ import 'package:loja/screens/cart_screen.dart';
 import 'package:loja/screens/edit_product/edit_product_screen.dart';
 import 'package:loja/screens/login/lgin_screen.dart';
 import 'package:loja/screens/select_product/select_product_screen.dart';
+import 'package:loja/services/cepaberto_service.dart';
 import 'package:provider/provider.dart';
 import 'package:loja/models/user_manager.dart';
 import 'package:loja/screens/signup/signup_screen.dart';
@@ -20,6 +21,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
+  CepAbertoService().getAdressFromCEP('13.087-000');
 }
 
 class MyApp extends StatelessWidget {
