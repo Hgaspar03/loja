@@ -21,7 +21,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
-  CepAbertoService().getAdressFromCEP('13.087-000');
+  CepAbertoService()
+      .getAdressFromCEP('13.087-000')
+      .then((cepAdress) => print(cepAdress.cidade.nome));
 }
 
 class MyApp extends StatelessWidget {

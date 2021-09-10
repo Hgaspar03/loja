@@ -1,0 +1,5 @@
+
+
+GET https://www.cepaberto.com/api/v3/cep?cep=13087000 HTTP/1.1
+Content-Type: application/json
+Authorization: Token token=6b2dbddb3c973d884b61cb99b4f163d9
