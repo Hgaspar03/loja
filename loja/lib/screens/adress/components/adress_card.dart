@@ -8,15 +8,17 @@ class AdressCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Endereco de Entrega",
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-            ),
-            CepInputField(),
-          ],
+        child: Form(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Endereco de Entrega",
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              ),
+              CepInputField(),
+            ],
+          ),
         ),
       ),
     );

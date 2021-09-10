@@ -21,9 +21,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
-  CepAbertoService()
-      .getAdressFromCEP('13.087-000')
-      .then((cepAdress) => print(cepAdress.cidade.nome));
 }
 
 class MyApp extends StatelessWidget {
@@ -36,10 +33,6 @@ class MyApp extends StatelessWidget {
           create: (_) => UserManager(),
         ),
         ChangeNotifierProvider(create: (_) => ProductManager(), lazy: false),
-        ChangeNotifierProvider(
-          create: (_) => HomeManager(),
-          lazy: false,
-        ),
         ChangeNotifierProvider(
           create: (_) => HomeManager(),
           lazy: false,
@@ -92,7 +85,7 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(builder: (_) => SelectProductScreen());
               break;
 
-            case '/adress':
+            case '/address':
               return MaterialPageRoute(builder: (_) => AdressScreen());
               break;
 
