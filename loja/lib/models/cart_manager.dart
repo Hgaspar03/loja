@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:loja/models/address.dart';
 import 'package:loja/models/cart_product.dart';
 import 'package:loja/models/cepaberto_address.dart';
 import 'package:loja/models/products.dart';
@@ -14,6 +15,8 @@ class CartManager extends ChangeNotifier {
 
   LocalUser user;
 
+  Address addres;
+
   addToCart(Product product) {
     try {
       final e = itens.firstWhere((e) => e.stackeble(product));
@@ -25,14 +28,14 @@ class CartManager extends ChangeNotifier {
 
       user.cartRef
           .add(cartProduct.toCartItemMap())
-          .then((doc) => cartProduct.id = doc.documentID);
+          .then((doc) => cartProduct.id = doc.id);
       _onItemUpdate();
     }
     notifyListeners();
   }
 
   Future<void> _loadCartItems() async {
-    final QuerySnapshot cartSnap = await user.cartRef.getDocuments();
+    final QuerySnapshot cartSnap = await user.cartRef.get();
     itens = cartSnap.docs
         .map((d) => CartProduct.fromDcument(d)..addListener(_onItemUpdate))
         .toList();
@@ -87,10 +90,24 @@ class CartManager extends ChangeNotifier {
     return true;
   }
 
-  Future<CepAbertoAdress> getAdress(String cep) async {
+  Future<void> getAdress(String cep) async {
     final cepAbertoService = CepAbertoService();
+    try {
+      final adress = await cepAbertoService.getAdressFromCEP(cep);
 
-    final adress = await cepAbertoService.getAdressFromCEP(cep);
-    return adress;
+      if (adress != null) {
+        this.addres = Address(
+            street: adress.logradouro,
+            district: adress.bairro,
+            zipCode: adress.cep,
+            city: adress.cidade.nome,
+            state: adress.estado.sigla,
+            lat: adress.latitude,
+            long: adress.longitude);
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint("Erro e  $e.toString()");
+    }
   }
 }

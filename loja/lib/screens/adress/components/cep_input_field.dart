@@ -24,7 +24,7 @@ class CepInputField extends StatelessWidget {
           validator: (cep) {
             if (cep.isEmpty)
               return 'Campo obrigatrio';
-            else if (cep.length != 10)
+            else if (cep.length > 10)
               return 'CEP invalido';
             else
               return null;
