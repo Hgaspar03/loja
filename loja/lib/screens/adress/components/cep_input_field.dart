@@ -5,37 +5,49 @@ import 'package:flutter/services.dart';
 import 'package:loja/models/cart_manager.dart';
 
 class CepInputField extends StatelessWidget {
+  final TextEditingController cepTextController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final prinaryColor = Theme.of(context).primaryColor;
-    final cepTextController = TextEditingController();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         TextFormField(
           controller: cepTextController,
           decoration: const InputDecoration(
-              isDense: true, labelText: 'CEP', hintText: '12.541-854'),
+              isDense: true, labelText: 'CEP', hintText: '08.090-284'),
           keyboardType: TextInputType.number,
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
             CepInputFormatter(),
           ],
+          onChanged: (cep) => cep = cepTextController.text,
           validator: (cep) {
-            if (cep.isEmpty)
+            if (cepTextController.text.isEmpty)
               return 'Campo obrigatrio';
-            else if (cep.length > 10)
+            else if (cepTextController.text.length != 10)
               return 'CEP invalido';
             else
               return null;
           },
-          onChanged: (cep) => cep = cepTextController.text,
         ),
         ElevatedButton(
           onPressed: () {
-            if (Form.of(context).validate()) {
-              context.read<CartManager>().getAdress(cepTextController.text);
-            }
+            if (Form.of(context).validate())
+              context
+                  .read<CartManager>()
+                  .getAdress(cepTextController.text)
+                  .onError(
+                    (error, _) => ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(error),
+                        duration: Duration(seconds: 3),
+                      ),
+                    ),
+                  );
+
+            cepTextController.text = null;
           },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith<Color>(

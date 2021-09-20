@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:loja/models/address.dart';
 import 'package:loja/models/cart_manager.dart';
 import 'package:loja/screens/adress/components/cep_input_field.dart';
 import 'package:provider/provider.dart';
+
+import 'address_input_field.dart';
 
 class AdressCard extends StatelessWidget {
   @override
@@ -12,9 +15,8 @@ class AdressCard extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
         child: Consumer<CartManager>(
           builder: (_, cartManager, __) {
-            final address = cartManager.addres;
+            final address = cartManager.addres ?? Address();
 
-            print(address);
             return Form(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,6 +26,7 @@ class AdressCard extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                   ),
                   CepInputField(),
+                  if (address.zipCode != null) AddressInputField(address),
                 ],
               ),
             );

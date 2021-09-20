@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:loja/models/address.dart';
 import 'package:loja/models/cart_product.dart';
-import 'package:loja/models/cepaberto_address.dart';
 import 'package:loja/models/products.dart';
 import 'package:loja/models/user_manager.dart';
 import 'package:loja/models/user.dart';
@@ -68,15 +67,13 @@ class CartManager extends ChangeNotifier {
 
   void _updateCartProduct(CartProduct cartProduct) {
     if (cartProduct.id != null)
-      user.cartRef
-          .document(cartProduct.id)
-          .updateData(cartProduct.toCartItemMap());
+      user.cartRef.doc(cartProduct.id).update(cartProduct.toCartItemMap());
     notifyListeners();
   }
 
   void removeFromCart(CartProduct cartProduct) {
     itens.removeWhere((element) => element.id == cartProduct.id);
-    user.cartRef.document(cartProduct.id).delete();
+    user.cartRef.doc(cartProduct.id).delete();
     cartProduct.removeListener(_onItemUpdate);
     notifyListeners();
   }
@@ -92,22 +89,20 @@ class CartManager extends ChangeNotifier {
 
   Future<void> getAdress(String cep) async {
     final cepAbertoService = CepAbertoService();
-    try {
-      final adress = await cepAbertoService.getAdressFromCEP(cep);
 
-      if (adress != null) {
-        this.addres = Address(
-            street: adress.logradouro,
-            district: adress.bairro,
-            zipCode: adress.cep,
-            city: adress.cidade.nome,
-            state: adress.estado.sigla,
-            lat: adress.latitude,
-            long: adress.longitude);
-        notifyListeners();
-      }
-    } catch (e) {
-      debugPrint("Erro e  $e.toString()");
+    final adress = await cepAbertoService.getAdressFromCEP(cep);
+
+    if (adress != null) {
+      this.addres = Address(
+          street: adress.logradouro,
+          district: adress.bairro,
+          zipCode: adress.cep,
+          city: adress.cidade.nome,
+          state: adress.estado.sigla,
+          lat: adress.latitude,
+          long: adress.longitude);
     }
+
+    notifyListeners();
   }
 }
