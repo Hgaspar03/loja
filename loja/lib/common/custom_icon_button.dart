@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class CustonIconButton extends StatelessWidget {
-  CustonIconButton({this.iconData, this.color, this.onTap});
+  CustonIconButton({this.iconData, this.color, this.onTap, this.size});
   final IconData iconData;
   final VoidCallback onTap;
   final Color color;
+  final size;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +20,7 @@ class CustonIconButton extends StatelessWidget {
             child: Icon(
               iconData,
               color: onTap != null ? color : Colors.grey[400],
+              size: size ?? 24,
             ),
           ),
         ),

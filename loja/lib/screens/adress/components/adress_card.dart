@@ -25,8 +25,8 @@ class AdressCard extends StatelessWidget {
                     "Endereco de Entrega",
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                   ),
-                  CepInputField(),
-                  if (address.zipCode != null) AddressInputField(address),
+                  CepInputField(address),
+                  AddressInputField(address),
                 ],
               ),
             );

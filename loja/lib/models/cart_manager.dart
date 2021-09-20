@@ -105,4 +105,9 @@ class CartManager extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  void removeAddress() {
+    addres = null;
+    notifyListeners();
+  }
 }
