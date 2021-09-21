@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:loja/models/address.dart';
 import 'package:loja/models/cart_product.dart';
@@ -15,6 +16,8 @@ class CartManager extends ChangeNotifier {
   LocalUser user;
 
   Address addres;
+
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   addToCart(Product product) {
     try {
@@ -109,5 +112,16 @@ class CartManager extends ChangeNotifier {
   void removeAddress() {
     addres = null;
     notifyListeners();
+  }
+
+  void setAddress(Address address) {
+    addres = this.addres;
+  }
+
+  Future<void> calculateDelivery(double lat, double long) async {
+    final DocumentSnapshot doc = await firestore.doc('aux/delivery').get();
+
+    final latStore = doc.data()['lat'] as double;
+    final longStore = doc.data()['long'] as double;
   }
 }
