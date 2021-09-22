@@ -22,6 +22,8 @@ class CartManager extends ChangeNotifier {
 
   num deliveryPrice = 0.0;
 
+  num get totalPrice => productsPrice + (this.deliveryPrice ?? 0);
+
   addToCart(Product product) {
     try {
       final e = itens.firstWhere((e) => e.stackeble(product));
@@ -92,6 +94,8 @@ class CartManager extends ChangeNotifier {
     }
     return true;
   }
+
+  bool get isAddressValid => addres != null && deliveryPrice != null;
 
   Future<void> getAdress(String cep) async {
     final cepAbertoService = CepAbertoService();

@@ -147,6 +147,13 @@ class AddressInputField extends StatelessWidget {
         ],
       );
     } else {
+      if (address.zipCode != null)
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Text(
+              '${address.street}, ${address.number ?? ''}\n${address.district}\n'
+              '${address.city}, ${address.state}\n ${address.complement ?? ''}'),
+        );
       return Container();
     }
   }
