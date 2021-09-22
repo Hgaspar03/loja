@@ -14,8 +14,10 @@ class AddressInputField extends StatelessWidget {
     String emptyValidator(String text) =>
         text.isEmpty ? 'Campo obrigatório' : null;
 
+    final deliveryPrice = context.watch<CartManager>().deliveryPrice;
+
     final primaryColor = Theme.of(context).primaryColor;
-    if (address.zipCode != null) {
+    if (address.zipCode != null && deliveryPrice == null) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -35,7 +37,7 @@ class AddressInputField extends StatelessWidget {
                 child: TextFormField(
                   initialValue: address.number,
                   decoration: const InputDecoration(
-                      isDense: true, labelText: 'Número', hintText: '1222125'),
+                      isDense: true, labelText: 'Número', hintText: '350'),
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   keyboardType: TextInputType.number,
                   validator: emptyValidator,
@@ -52,7 +54,7 @@ class AddressInputField extends StatelessWidget {
                       isDense: true,
                       labelText: 'Complemento',
                       hintText: 'Opcional'),
-                  onSaved: (t) => address.number = t,
+                  onSaved: (t) => address.complement = t,
                 ),
               ),
             ],
@@ -115,10 +117,19 @@ class AddressInputField extends StatelessWidget {
             width: 8,
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               if (Form.of(context).validate()) {
                 Form.of(context).save();
-                context.read<CartManager>().setAddress(address);
+                try {
+                  context.read<CartManager>().setAddress(address);
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('$e'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
               }
             },
             child: const Text('Calcular Frete'),

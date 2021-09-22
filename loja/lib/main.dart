@@ -11,7 +11,6 @@ import 'package:loja/screens/cart_screen.dart';
 import 'package:loja/screens/edit_product/edit_product_screen.dart';
 import 'package:loja/screens/login/lgin_screen.dart';
 import 'package:loja/screens/select_product/select_product_screen.dart';
-import 'package:loja/services/cepaberto_service.dart';
 import 'package:provider/provider.dart';
 import 'package:loja/models/user_manager.dart';
 import 'package:loja/screens/signup/signup_screen.dart';
@@ -84,11 +83,9 @@ class MyApp extends StatelessWidget {
             case '/select_product':
               return MaterialPageRoute(builder: (_) => SelectProductScreen());
               break;
-
             case '/address':
               return MaterialPageRoute(builder: (_) => AdressScreen());
               break;
-
             case '/base':
             default:
               return MaterialPageRoute(builder: (_) => BaseScreen());

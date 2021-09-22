@@ -27,6 +27,14 @@ class AdressCard extends StatelessWidget {
                   ),
                   CepInputField(address),
                   AddressInputField(address),
+                  if (address.zipCode != null &&
+                      cartManager.deliveryPrice != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: Text(
+                          '${address.street}, ${address.number}\n${address.district}\n'
+                          '${address.city}, ${address.state}\n${address.complement}'),
+                    ),
                 ],
               ),
             );
