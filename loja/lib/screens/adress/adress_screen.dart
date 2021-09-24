@@ -22,7 +22,7 @@ class AdressScreen extends StatelessWidget {
                 cartManager.isAddressValid ? () {} : null,
               );
             },
-          )
+          ),
         ],
       ),
     );

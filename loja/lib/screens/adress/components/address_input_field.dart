@@ -14,14 +14,15 @@ class AddressInputField extends StatelessWidget {
     String emptyValidator(String text) =>
         text.isEmpty ? 'Campo obrigatório' : null;
 
-    final deliveryPrice = context.watch<CartManager>().deliveryPrice;
+    final cartManager = context.watch<CartManager>();
 
     final primaryColor = Theme.of(context).primaryColor;
-    if (address.zipCode != null && deliveryPrice == null) {
+    if (address.zipCode != null && cartManager.deliveryPrice == null) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
+            enabled: !cartManager.loading,
             initialValue: address.street,
             decoration: const InputDecoration(
               isDense: true,
@@ -49,6 +50,7 @@ class AddressInputField extends StatelessWidget {
               ),
               Expanded(
                 child: TextFormField(
+                  enabled: !cartManager.loading,
                   initialValue: address.complement,
                   decoration: const InputDecoration(
                       isDense: true,
@@ -60,6 +62,7 @@ class AddressInputField extends StatelessWidget {
             ],
           ),
           TextFormField(
+            enabled: !cartManager.loading,
             initialValue: address.district,
             decoration: const InputDecoration(
               isDense: true,
@@ -116,22 +119,29 @@ class AddressInputField extends StatelessWidget {
           const SizedBox(
             width: 8,
           ),
+          if (cartManager.loading)
+            LinearProgressIndicator(
+              color: primaryColor,
+              backgroundColor: Colors.transparent,
+            ),
           ElevatedButton(
-            onPressed: () async {
-              if (Form.of(context).validate()) {
-                Form.of(context).save();
-                try {
-                  context.read<CartManager>().setAddress(address);
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('$e'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              }
-            },
+            onPressed: !cartManager.loading
+                ? () async {
+                    if (Form.of(context).validate()) {
+                      Form.of(context).save();
+                      try {
+                        context.read<CartManager>().setAddress(address);
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('$e'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    }
+                  }
+                : null,
             child: const Text('Calcular Frete'),
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.resolveWith<Color>(
