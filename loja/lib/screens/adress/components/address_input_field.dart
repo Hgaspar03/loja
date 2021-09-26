@@ -124,6 +124,7 @@ class AddressInputField extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('$e'),
+                      backgroundColor: Colors.red,
                     ),
                   );
                 }

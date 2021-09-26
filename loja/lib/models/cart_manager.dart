@@ -116,10 +116,13 @@ class CartManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setAddress(Address address) {
+  Future<void> setAddress(Address address) async {
     this.addres = address;
 
-    calculateDelivery(address.lat, address.long);
+    if (await calculateDelivery(address.lat, address.long)) {
+    } else {
+      return Future.error('Endereço fora do raio de Entrega :( ');
+    }
   }
 
   Future<bool> calculateDelivery(double lat, double long) async {
