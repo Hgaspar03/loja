@@ -81,21 +81,32 @@ class LoginScreen extends StatelessWidget {
                         ? null
                         : () {
                             if (formkey.currentState.validate()) {
-                              userManager.signIn(
+                              userManager
+                                  .signIn(
                                 user: LocalUser(
                                     email: emailController.text,
                                     password: passwordControler.text),
                                 onFail: (e) {
-                                  scaffoldKey.currentState
-                                      .showSnackBar(SnackBar(
-                                    content: Text("Erro: $e"),
-                                    backgroundColor: Colors.red,
-                                  ));
+                                  userManager.loading = false;
                                 },
                                 onSucess: () {
+                                  userManager.loading = false;
                                   Navigator.of(context).pop();
                                 },
-                              );
+                              )
+                                  .onError((e, _) {
+                                userManager.loading = false;
+                                return ScaffoldMessenger.of(context)
+                                    .showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "Usuario ou senha invalidos",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              });
                             }
                           },
                     color: Theme.of(context).primaryColor,

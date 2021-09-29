@@ -25,18 +25,13 @@ class UserManager extends ChangeNotifier {
   Future<void> signIn(
       {LocalUser user, Function onFail, Function onSucess}) async {
     loading = true;
-    try {
-      UserCredential result = (await auth.signInWithEmailAndPassword(
-          email: user.email, password: user.password));
 
-      await _loadCurrentUser(firebaseUser: result.user);
+    UserCredential result = (await auth.signInWithEmailAndPassword(
+        email: user.email, password: user.password));
 
-      onSucess();
-    } on PlatformException catch (e) {
-      onFail(getErrorString(e.code));
-    }
-
+    await _loadCurrentUser(firebaseUser: result.user);
     loading = false;
+    onSucess();
   }
 
   Future<void> signUp(
