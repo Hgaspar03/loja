@@ -167,7 +167,7 @@ class CartManager extends ChangeNotifier {
 
   Future<void> _loadUserAddress() async {
     if (user.address != null &&
-        await calculateDelivery(addres.lat, addres.long)) {
+        await calculateDelivery(user.address.lat, user.address.long)) {
       this.addres = user.address;
       notifyListeners();
     }

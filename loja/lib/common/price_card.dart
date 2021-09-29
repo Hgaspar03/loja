@@ -3,7 +3,7 @@ import 'package:loja/models/cart_manager.dart';
 import 'package:provider/provider.dart';
 
 class PriceCard extends StatelessWidget {
-  const PriceCard(this.bottonText, this.onPressed);
+  const PriceCard({this.bottonText, this.onPressed});
 
   final String bottonText;
   final VoidCallback onPressed;

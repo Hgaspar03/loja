@@ -34,10 +34,10 @@ class CartScreen extends StatelessWidget {
                     .toList(),
               ),
               PriceCard(
-                  'Continuar para entrega',
-                  cartManager.isCartValid
+                  bottonText: 'Continuar para entrega',
+                  onPressed: cartManager.isCartValid
                       ? () {
-                          Navigator.of(context).pushNamed("/address");
+                          Navigator.of(context).pushNamed('/checkout');
                         }
                       : null)
             ],
