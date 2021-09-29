@@ -8,6 +8,7 @@ import 'package:loja/models/products.dart';
 import 'package:loja/screens/adress/adress_screen.dart';
 import 'package:loja/screens/base/base_screen.dart';
 import 'package:loja/screens/cart_screen.dart';
+import 'package:loja/screens/checkout_screen.dart';
 import 'package:loja/screens/edit_product/edit_product_screen.dart';
 import 'package:loja/screens/login/lgin_screen.dart';
 import 'package:loja/screens/select_product/select_product_screen.dart';
@@ -85,6 +86,9 @@ class MyApp extends StatelessWidget {
               break;
             case '/address':
               return MaterialPageRoute(builder: (_) => AdressScreen());
+              break;
+            case '/checkout':
+              return MaterialPageRoute(builder: (_) => CheckoutScreen());
               break;
             case '/base':
             default:
