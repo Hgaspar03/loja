@@ -6,22 +6,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loja/models/cart_manager.dart';
 
-class CepInputField extends StatelessWidget {
-  CepInputField(this.address);
+class CepInputField extends StatefulWidget {
+  const CepInputField(this.address);
 
   final Address address;
 
+  @override
+  _CepInputFieldState createState() => _CepInputFieldState();
+}
+
+class _CepInputFieldState extends State<CepInputField> {
   final TextEditingController cepTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final prinaryColor = Theme.of(context).primaryColor;
 
-    if (address.zipCode == null)
+    final cartManager = context.watch<CartManager>();
+
+    if (widget.address.zipCode == null)
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
+            enabled: !cartManager.loading,
             controller: cepTextController,
             decoration: const InputDecoration(
                 isDense: true, labelText: 'CEP', hintText: '08.090-284'),
@@ -40,23 +48,33 @@ class CepInputField extends StatelessWidget {
                 return null;
             },
           ),
+          if (cartManager.loading)
+            LinearProgressIndicator(
+              color: prinaryColor,
+              backgroundColor: Colors.transparent,
+            ),
           ElevatedButton(
-            onPressed: () {
-              if (Form.of(context).validate())
-                context
-                    .read<CartManager>()
-                    .getAdress(cepTextController.text)
-                    .onError(
-                      (error, _) => ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(error),
-                          duration: Duration(seconds: 3),
-                        ),
-                      ),
-                    );
+            onPressed: !cartManager.loading
+                ? () {
+                    if (Form.of(context).validate())
+                      context
+                          .read<CartManager>()
+                          .getAdress(cepTextController.text)
+                          .onError(
+                            (error, _) =>
+                                ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(error),
+                                backgroundColor: Colors.red,
+                                duration: Duration(seconds: 3),
+                              ),
+                            ),
+                          )
+                          .then((_) => cartManager.loading = false);
 
-              cepTextController.text = null;
-            },
+                    cepTextController.text = null;
+                  }
+                : null,
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
@@ -78,7 +96,7 @@ class CepInputField extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                'CEP: ${address.zipCode}',
+                'CEP: ${widget.address.zipCode}',
                 style:
                     TextStyle(fontWeight: FontWeight.w600, color: prinaryColor),
               ),

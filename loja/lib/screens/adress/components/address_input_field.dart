@@ -14,12 +14,15 @@ class AddressInputField extends StatelessWidget {
     String emptyValidator(String text) =>
         text.isEmpty ? 'Campo obrigatório' : null;
 
+    final cartManager = context.watch<CartManager>();
+
     final primaryColor = Theme.of(context).primaryColor;
-    if (address.zipCode != null) {
+    if (address.zipCode != null && cartManager.deliveryPrice == null) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
+            enabled: !cartManager.loading,
             initialValue: address.street,
             decoration: const InputDecoration(
               isDense: true,
@@ -35,7 +38,7 @@ class AddressInputField extends StatelessWidget {
                 child: TextFormField(
                   initialValue: address.number,
                   decoration: const InputDecoration(
-                      isDense: true, labelText: 'Número', hintText: '1222125'),
+                      isDense: true, labelText: 'Número', hintText: '350'),
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   keyboardType: TextInputType.number,
                   validator: emptyValidator,
@@ -47,17 +50,19 @@ class AddressInputField extends StatelessWidget {
               ),
               Expanded(
                 child: TextFormField(
+                  enabled: !cartManager.loading,
                   initialValue: address.complement,
                   decoration: const InputDecoration(
                       isDense: true,
                       labelText: 'Complemento',
                       hintText: 'Opcional'),
-                  onSaved: (t) => address.number = t,
+                  onSaved: (t) => address.complement = t,
                 ),
               ),
             ],
           ),
           TextFormField(
+            enabled: !cartManager.loading,
             initialValue: address.district,
             decoration: const InputDecoration(
               isDense: true,
@@ -114,22 +119,29 @@ class AddressInputField extends StatelessWidget {
           const SizedBox(
             width: 8,
           ),
+          if (cartManager.loading)
+            LinearProgressIndicator(
+              color: primaryColor,
+              backgroundColor: Colors.transparent,
+            ),
           ElevatedButton(
-            onPressed: () async {
-              if (Form.of(context).validate()) {
-                Form.of(context).save();
-                try {
-                  context.read<CartManager>().setAddress(address);
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('$e'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              }
-            },
+            onPressed: !cartManager.loading
+                ? () async {
+                    if (Form.of(context).validate()) {
+                      Form.of(context).save();
+                      try {
+                        context.read<CartManager>().setAddress(address);
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('$e'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    }
+                  }
+                : null,
             child: const Text('Calcular Frete'),
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.resolveWith<Color>(
@@ -145,6 +157,13 @@ class AddressInputField extends StatelessWidget {
         ],
       );
     } else {
+      if (address.zipCode != null)
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Text(
+              '${address.street}, ${address.number ?? ''}\n${address.district}\n'
+              '${address.city}, ${address.state}\n ${address.complement ?? ''}'),
+        );
       return Container();
     }
   }

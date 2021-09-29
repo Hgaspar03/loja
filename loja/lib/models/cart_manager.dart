@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:loja/models/address.dart';
@@ -20,6 +21,15 @@ class CartManager extends ChangeNotifier {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   num deliveryPrice = 0.0;
+  bool _loading = false;
+
+  num get totalPrice => productsPrice + (this.deliveryPrice ?? 0);
+  bool get loading => _loading;
+
+  set loading(bool isLoading) {
+    _loading = isLoading;
+    notifyListeners();
+  }
 
   addToCart(Product product) {
     try {
@@ -92,7 +102,11 @@ class CartManager extends ChangeNotifier {
     return true;
   }
 
+  bool get isAddressValid => addres != null && deliveryPrice != null;
+
   Future<void> getAdress(String cep) async {
+    loading = true;
+
     final cepAbertoService = CepAbertoService();
 
     final adress = await cepAbertoService.getAdressFromCEP(cep);
@@ -108,20 +122,23 @@ class CartManager extends ChangeNotifier {
           long: adress.longitude);
     }
 
-    notifyListeners();
+    loading = false;
   }
 
   void removeAddress() {
     addres = null;
+    deliveryPrice = null;
     notifyListeners();
   }
 
-  Future<void> setAddress(Address address) async {
+  void setAddress(Address address) async {
+    loading = true;
     this.addres = address;
-
     if (await calculateDelivery(address.lat, address.long)) {
+      loading = false;
     } else {
-      return Future.error('Endereço fora do raio de Entrega :( ');
+      loading = false;
+      return Future.error('Endereco fora do raio de entrega :(');
     }
   }
 
