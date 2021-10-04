@@ -37,7 +37,7 @@ class CartScreen extends StatelessWidget {
                   bottonText: 'Continuar para entrega',
                   onPressed: cartManager.isCartValid
                       ? () {
-                          Navigator.of(context).pushNamed('/checkout');
+                          Navigator.of(context).pushNamed('/address');
                         }
                       : null)
             ],

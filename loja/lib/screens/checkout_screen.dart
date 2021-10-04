@@ -20,12 +20,16 @@ class CheckoutScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Pagamento'),
         ),
-        body: ListView(
-          children: [
-            PriceCard(
-                bottonText: 'Finalizar Pagamento',
-                onPressed: cartManager.isAddressValid ? () {} : null)
-          ],
+        body: Consumer<CheckoutManager>(
+          builder: (_, checkoutManager, __) {
+            return ListView(
+              children: [
+                PriceCard(
+                    bottonText: 'Finalizar Pagamento',
+                    onPressed: cartManager.isAddressValid ? () {} : null)
+              ],
+            );
+          },
         ),
       ),
     );

@@ -135,8 +135,9 @@ class CartManager extends ChangeNotifier {
   }
 
   void setAddress(Address address) async {
-    user.setAddress(address);
     loading = true;
+    user.setAddress(address);
+
     this.addres = address;
     if (await calculateDelivery(address.lat, address.long)) {
       loading = false;
@@ -147,22 +148,28 @@ class CartManager extends ChangeNotifier {
   }
 
   Future<bool> calculateDelivery(double lat, double long) async {
-    final DocumentSnapshot doc = await firestore.doc('aux/delivery').get();
+    double dis;
+    try {
+      final DocumentSnapshot doc = await firestore.doc('aux/delivery').get();
 
-    final double latStore = doc.data()['lat'] as double;
-    final double longStore = doc.data()['long'] as double;
-    final num maxKm = doc.data()['maxkm'] as num;
-    final num base = doc.data()['base'] as num;
-    final num km = doc.data()['km'] as num;
+      final double latStore = doc.data()['lat'] as double;
+      final double longStore = doc.data()['long'] as double;
+      final num maxKm = doc.data()['maxkm'] as num;
+      final num base = doc.data()['base'] as num;
+      final num km = doc.data()['km'] as num;
+      double dis;
 
-    double dis =
-        await Geolocator().distanceBetween(latStore, longStore, lat, long);
+      dis = Geolocator.distanceBetween(latStore, longStore, lat, long);
+      dis /= 1000.0;
+      if (dis <= maxKm) return false;
+      deliveryPrice = base + dis * km;
+      return true;
+    } catch (e) {
+      loading = false;
+      return Future.error(e);
+    }
 
-    dis /= 1000.0;
-
-    if (dis <= maxKm) return false;
-    deliveryPrice = base + dis * km;
-    return true;
+    return false;
   }
 
   Future<void> _loadUserAddress() async {
