@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:loja/models/cart_manager.dart';
+import 'package:loja/models/products.dart';
 
 class CheckoutManager extends ChangeNotifier {
   CartManager cartManager;
@@ -11,23 +13,50 @@ class CheckoutManager extends ChangeNotifier {
     this.cartManager = cartManager;
   }
 
-  void chackout() {
+  void checkout() async {
     _decrementStock();
-    print(_getOrderId());
+    print(await _getOrderId());
   }
-}
 
-void _decrementStock() {}
+  void _decrementStock() async {
+    this.cartManager = cartManager;
 
-Future<int> _getOrderId() async {
-  final ref = FirebaseFirestore.instance.doc('aux/orderCounter');
-  final result = FirebaseFirestore.instance.runTransaction((tx) async {
-    final doc = await tx.get(ref);
+    firestore.runTransaction(
+      (tx) async {
+        final List<Product> productToUpdate = [];
+        for (final cartProduct in this.cartManager.itens) {
+          final doc = await tx.get(
+            firestore.doc('products/${cartProduct.productId}'),
+          );
 
-    final orderId = doc.data()['current'] as int;
-    tx.update(ref, {'current': orderId + 1});
-    return {'orderId': orderId};
-  });
+          final product = Product.fromDocument(doc);
 
-  return result.then((value) => value['orderId']) as int;
+          final size = product.findSize(cartProduct.size);
+          if (size.stock - cartProduct.quantity < 0) {
+          } else {
+            size.stock -= cartProduct.quantity;
+            productToUpdate.add(product);
+          }
+        }
+      },
+    );
+  }
+
+  Future<int> _getOrderId() async {
+    try {
+      final ref = firestore.doc('aux/orderCounter');
+      final result = firestore.runTransaction((tx) async {
+        final doc = await tx.get(ref);
+
+        final orderId = doc.data()['current'] as int;
+        tx.update(ref, {'current': orderId + 1});
+        return {'orderId': orderId};
+      }, timeout: Duration(seconds: 10));
+
+      return result.then((value) => value['orderId']) as int;
+    } catch (e) {
+      debugPrint(e.toString());
+      return Future.error('Erro ao gerar numero de pedido');
+    }
+  }
 }

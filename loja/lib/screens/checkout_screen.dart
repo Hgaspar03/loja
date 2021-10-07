@@ -26,7 +26,21 @@ class CheckoutScreen extends StatelessWidget {
               children: [
                 PriceCard(
                     bottonText: 'Finalizar Pagamento',
-                    onPressed: cartManager.isAddressValid ? () {} : null)
+                    onPressed: cartManager.isAddressValid
+                        ? () {
+                            checkoutManager.checkout();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.green[500],
+                                duration: Duration(seconds: 5),
+                                content: Text(
+                                  'Finalizado com sucesso',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+                          }
+                        : null)
               ],
             );
           },
