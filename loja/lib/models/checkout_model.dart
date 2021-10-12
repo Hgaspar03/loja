@@ -13,11 +13,11 @@ class CheckoutManager extends ChangeNotifier {
     this.cartManager = cartManager;
   }
 
-  Future<void> checkout() async {
+  Future<void> checkout({Function onStockFail}) async {
     try {
       await _decrementStock();
     } catch (e) {
-      debugPrint(e);
+      onStockFail(e);
     }
 
     _getOrderId();
@@ -43,6 +43,7 @@ class CheckoutManager extends ChangeNotifier {
 
             product = Product.fromDocument(doc);
           }
+          cartProduct.product = product;
 
           final size = product.findSize(cartProduct.size);
           if (size.stock - cartProduct.quantity < 0) {

@@ -28,7 +28,13 @@ class CheckoutScreen extends StatelessWidget {
                     bottonText: 'Finalizar Pagamento',
                     onPressed: cartManager.isAddressValid
                         ? () {
-                            checkoutManager.checkout();
+                            checkoutManager.checkout(onStockFail: (e) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(e.toString()),
+                                backgroundColor: Colors.red,
+                              ));
+                            });
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 backgroundColor: Colors.green[500],
