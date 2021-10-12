@@ -28,23 +28,32 @@ class CheckoutScreen extends StatelessWidget {
                     bottonText: 'Finalizar Pagamento',
                     onPressed: cartManager.isAddressValid
                         ? () {
-                            checkoutManager.checkout(onStockFail: (e) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(e.toString()),
-                                backgroundColor: Colors.red,
-                              ));
-                            });
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                backgroundColor: Colors.green[500],
-                                duration: Duration(seconds: 5),
-                                content: Text(
-                                  'Finalizado com sucesso',
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            );
+                            checkoutManager.checkout(
+                                onStockFail: (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(e.toString()),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  Navigator.of(context).popUntil((route) =>
+                                      route.settings.name == '/cart');
+                                },
+                                onStockSucess: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      duration: Duration(seconds: 2),
+                                      content: Text(
+                                        'Finalizado com sucesso',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+                                  Navigator.of(context).popUntil((route) =>
+                                      route.settings.name == '/cart');
+                                },
+                                cartManager: cartManager);
                           }
                         : null)
               ],

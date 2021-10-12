@@ -4,17 +4,24 @@ import 'package:loja/models/iten_size.dart';
 import 'package:loja/models/products.dart';
 
 class CartProduct extends ChangeNotifier {
-  CartProduct.fromProduct(this.product) {
+  CartProduct.fromProduct(product) {
     productId = product.id;
     quantity = 1;
     size = product.selectedSize.name;
   }
 
   String id;
-  Product product;
+  Product _product;
   String productId;
   int quantity;
   String size;
+
+  Product get product => _product;
+
+  set product(value) {
+    _product = value;
+    notifyListeners();
+  }
 
   final firestore = FirebaseFirestore.instance;
 
@@ -34,8 +41,8 @@ class CartProduct extends ChangeNotifier {
     quantity = d.data()['quantity'] as int;
     size = d.data()['size'] as String;
 
-    firestore.document('products/$productId').get().then((d) {
-      product = Product.fromDocument(d);
+    firestore.doc('products/$productId').get().then((d) {
+      _product = Product.fromDocument(d);
       notifyListeners();
     });
   }

@@ -68,6 +68,11 @@ class PriceCard extends StatelessWidget {
             SizedBox(
               height: 8,
             ),
+            if (cartManager.loading)
+              LinearProgressIndicator(
+                color: Theme.of(context).primaryColor,
+                backgroundColor: Colors.transparent,
+              ),
             RaisedButton(
               onPressed: onPressed,
               disabledColor: Theme.of(context).primaryColor.withAlpha(100),
