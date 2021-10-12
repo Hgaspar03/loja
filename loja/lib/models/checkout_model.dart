@@ -13,30 +13,53 @@ class CheckoutManager extends ChangeNotifier {
     this.cartManager = cartManager;
   }
 
-  void checkout() async {
-    _decrementStock();
-    print(await _getOrderId());
+  Future<void> checkout() async {
+    try {
+      await _decrementStock();
+    } catch (e) {
+      debugPrint(e);
+    }
+
+    _getOrderId();
   }
 
-  void _decrementStock() async {
+  Future<void> _decrementStock() async {
     this.cartManager = cartManager;
 
-    firestore.runTransaction(
+    return firestore.runTransaction(
       (tx) async {
         final List<Product> productToUpdate = [];
-        for (final cartProduct in this.cartManager.itens) {
-          final doc = await tx.get(
-            firestore.doc('products/${cartProduct.productId}'),
-          );
+        final List<Product> productWithoutStock = [];
 
-          final product = Product.fromDocument(doc);
+        for (final cartProduct in this.cartManager.itens) {
+          Product product;
+
+          if (productToUpdate.any((p) => p.id == cartProduct.productId)) {
+            product = productToUpdate
+                .firstWhere((p) => p.id == cartProduct.productId);
+          } else {
+            final doc = await tx
+                .get(firestore.doc('products/${cartProduct.productId}'));
+
+            product = Product.fromDocument(doc);
+          }
 
           final size = product.findSize(cartProduct.size);
           if (size.stock - cartProduct.quantity < 0) {
+            productWithoutStock.add(product);
           } else {
             size.stock -= cartProduct.quantity;
             productToUpdate.add(product);
           }
+        }
+
+        if (productWithoutStock.isNotEmpty) {
+          return Future.error(
+              '${productWithoutStock.length} produtos sem estoque');
+        }
+        for (final product in productToUpdate) {
+          tx.update(firestore.doc('products/${product.id}'),
+              {'sizes': product.exportSizeList()});
         }
       },
     );
@@ -53,9 +76,8 @@ class CheckoutManager extends ChangeNotifier {
         return {'orderId': orderId};
       }, timeout: Duration(seconds: 10));
 
-      return result.then((value) => value['orderId']) as int;
-    } catch (e) {
-      debugPrint(e.toString());
+      return await result.then((value) async => value['orderId']);
+    } on FirebaseException {
       return Future.error('Erro ao gerar numero de pedido');
     }
   }
